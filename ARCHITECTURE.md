@@ -1,52 +1,53 @@
 # 🏗️ Architecture & Design Document
 
-> Deep-dive into the technical design, data flow, ML pipeline, and component structure of the Credit Risk Analytics Platform.
+> Technical deep-dive into the design, data flow, ML pipeline, and component structure of the Credit Risk Analytics Platform.
 
 ---
 
 ## 📋 Table of Contents
 
-- [High-Level Architecture](#-high-level-architecture)
-- [Request Lifecycle](#-request-lifecycle)
-- [ML Pipeline](#-ml-pipeline)
-- [Frontend Component Tree](#-frontend-component-tree)
-- [Backend State Management](#-backend-state-management)
-- [Security Model](#-security-model)
-- [Dependency Overview](#-dependency-overview)
-- [Test Architecture](#-test-architecture)
-- [Future Improvements](#-future-improvements)
+| Section | Description |
+|---------|-------------|
+| [🧱 High-Level Architecture](#-high-level-architecture) | Three-tier system overview |
+| [🔁 Request Lifecycle](#-request-lifecycle) | Training & prediction flows |
+| [🧬 ML Pipeline](#-ml-pipeline) | Step-by-step ML process |
+| [🖥️ Frontend Components](#️-frontend-component-tree) | React component hierarchy |
+| [💾 State Management](#-backend-state-management) | Global state design |
+| [🔒 Security Model](#-security-model) | Threats and mitigations |
+| [📦 Dependencies](#-dependency-overview) | All packages explained |
+| [🧪 Test Architecture](#-test-architecture) | Test structure and coverage |
+| [🚧 Future Improvements](#-future-improvements) | Roadmap |
 
 ---
 
 ## 🧱 High-Level Architecture
 
-The platform follows a **Three-Tier Architecture**:
+The platform uses a **Three-Tier Architecture**:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  TIER 1 — Presentation Layer                                │
-│  React SPA @ localhost:5173                                 │
-│                                                             │
-│   Real-time Scorer  │  Model Training Hub  │  Dataset View  │
-└────────────────────────────┬────────────────────────────────┘
-                             │  REST API (Axios / HTTP)
-┌────────────────────────────▼────────────────────────────────┐
-│  TIER 2 — Application Layer                                 │
-│  FastAPI @ localhost:8000                                   │
-│                                                             │
-│   /api/data-info  │  /api/train  │  /api/predict            │
-│   /api/upload                                               │
-│                                                             │
-│   model_utils.py  →  preprocess → train → evaluate          │
-└────────────────────────────┬────────────────────────────────┘
-                             │  pandas + scikit-learn
-┌────────────────────────────▼────────────────────────────────┐
-│  TIER 3 — Data Layer                                        │
-│  CSV File  +  In-Memory State                               │
-│                                                             │
-│   credit_data.csv (5,000 rows)                              │
-│   state { df │ model │ scaler │ features │ metrics }        │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph Tier1["Tier 1 — Presentation  :5173"]
+        A[Real-time Scorer]
+        B[Model Training Hub]
+        C[Dataset Explorer]
+    end
+
+    subgraph Tier2["Tier 2 — Application  :8000"]
+        D[FastAPI Router]
+        E[model_utils.py]
+        F[In-Memory State]
+    end
+
+    subgraph Tier3["Tier 3 — Data"]
+        G[(credit_data.csv)]
+    end
+
+    A -->|HTTP POST /api/predict| D
+    B -->|HTTP POST /api/train| D
+    C -->|HTTP GET /api/data-info\nHTTP POST /api/upload| D
+    D --> E
+    E --> F
+    F -.->|read/write| G
 ```
 
 ---
@@ -55,86 +56,64 @@ The platform follows a **Three-Tier Architecture**:
 
 ### Training Flow
 
-```
-Client              FastAPI             model_utils.py
-  │                    │                      │
-  │  POST /api/train   │                      │
-  │  { model_name }    │                      │
-  │───────────────────▶│                      │
-  │                    │  load_data()         │
-  │                    │─────────────────────▶│
-  │                    │  preprocess_data()   │
-  │                    │─────────────────────▶│
-  │                    │  train_model()       │
-  │                    │─────────────────────▶│
-  │                    │  ← fitted model      │
-  │                    │  ← metrics           │
-  │  { metrics }       │                      │
-  │◀───────────────────│                      │
+```mermaid
+sequenceDiagram
+    participant C as Client (React)
+    participant A as FastAPI :8000
+    participant M as model_utils.py
+    participant S as scikit-learn
+
+    C->>A: POST /api/train { model_name }
+    A->>M: load_data(path)
+    M-->>A: DataFrame
+    A->>M: preprocess_data(df)
+    M-->>A: X_train, X_test, y_train, y_test
+    A->>M: train_model(name, X_train, y_train)
+    M->>S: model.fit(X_scaled, y)
+    S-->>M: fitted model
+    M-->>A: model + metrics
+    A-->>C: { status, model_name, metrics }
 ```
 
 ### Prediction Flow
 
-```
-Client              FastAPI             scikit-learn
-  │                    │                      │
-  │  POST /api/predict │                      │
-  │  { inputs }        │                      │
-  │───────────────────▶│                      │
-  │                    │  validate inputs     │
-  │                    │  scaler.transform()  │
-  │                    │  model.predict()     │
-  │                    │─────────────────────▶│
-  │                    │  model.predict_proba │
-  │                    │─────────────────────▶│
-  │                    │  ← label, prob       │
-  │  { prediction,     │                      │
-  │    probability }   │                      │
-  │◀───────────────────│                      │
+```mermaid
+sequenceDiagram
+    participant C as Client (React)
+    participant A as FastAPI :8000
+    participant S as scikit-learn
+
+    C->>A: POST /api/predict { inputs }
+    A->>A: Pydantic validation
+    A->>A: scaler.transform(X)
+    A->>S: model.predict(X_scaled)
+    S-->>A: label [0 or 1]
+    A->>S: model.predict_proba(X_scaled)
+    S-->>A: probability [0.0 – 1.0]
+    A-->>C: { prediction, probability, model_name }
 ```
 
 ---
 
 ## 🧬 ML Pipeline
 
-```
-Step 1 — Load
-   pd.read_csv(path)
-   df.dropna()
-
-Step 2 — Preprocess
-   X = df[feature_columns]
-   y = df["target"]
-   train_test_split(X, y, test_size=0.2)
-
-Step 3 — Scale
-   StandardScaler.fit(X_train)
-   X_train_scaled = scaler.transform(X_train)
-   X_test_scaled  = scaler.transform(X_test)
-
-Step 4 — Train
-   model = AlgorithmClassifier(**params)
-   model.fit(X_train_scaled, y_train)
-
-Step 5 — Evaluate
-   y_pred  = model.predict(X_test_scaled)
-   y_proba = model.predict_proba(X_test_scaled)[:,1]
-
-   Precision = precision_score(y_test, y_pred)
-   Recall    = recall_score(y_test, y_pred)
-   F1-Score  = f1_score(y_test, y_pred)
-   ROC-AUC   = roc_auc_score(y_test, y_proba)
-
-Step 6 — Store (Global State)
-   state["df"]           = df
-   state["model"]        = model
-   state["scaler"]       = scaler
-   state["feature_cols"] = feature_columns
-   state["model_name"]   = model_name
-   state["metrics"]      = { Precision, Recall, F1, ROC-AUC }
+```mermaid
+flowchart TD
+    A[📂 CSV File] --> B[Load\npd.read_csv · dropna]
+    B --> C[Split Features & Target\nX = features · y = target]
+    C --> D[Train/Test Split\n80% train · 20% test]
+    D --> E[Scale Features\nStandardScaler.fit on train]
+    E --> F[Train Classifier\nmodel.fit on X_train_scaled]
+    F --> G[Evaluate on Test Set\npredict · predict_proba]
+    G --> H{Metrics}
+    H --> H1[Precision]
+    H --> H2[Recall]
+    H --> H3[F1-Score]
+    H --> H4[ROC-AUC]
+    H1 & H2 & H3 & H4 --> I[(Global State\nmodel · scaler · metrics)]
 ```
 
-### Algorithm Configuration
+### Algorithm Parameters
 
 | Algorithm | Key Parameters |
 |-----------|---------------|
@@ -144,49 +123,43 @@ Step 6 — Store (Global State)
 | Gradient Boosting | `n_estimators=100`, `random_state=42` |
 | AdaBoost | `n_estimators=100`, `random_state=42` |
 | K-Nearest Neighbors | `n_neighbors=5` |
-| Naive Bayes | GaussianNB (no params) |
+| Naive Bayes | GaussianNB (defaults) |
 | SVM | `probability=True`, `random_state=42` |
 
 ---
 
 ## 🖥️ Frontend Component Tree
 
-```
-App.jsx
-│
-├── Header
-│     └── Theme Toggle (Dark ↔ Light)
-│
-├── Tab: Real-time Scorer
-│     ├── Feature Sliders
-│     │     ├── income
-│     │     ├── debts
-│     │     ├── payment_history
-│     │     ├── age
-│     │     ├── credit_cards
-│     │     └── loan_amount
-│     ├── Predict Button  →  POST /api/predict
-│     ├── Risk Gauge (0 – 100%)
-│     └── Verdict Banner (Good Credit / Bad Credit)
-│
-├── Tab: Model Training Hub
-│     ├── Algorithm Selector (8 models)
-│     ├── Train Button  →  POST /api/train
-│     ├── Metrics Cards (Precision · Recall · F1 · ROC-AUC)
-│     └── Benchmark Bar Chart (ECharts)
-│
-└── Tab: Dataset Explorer
-      ├── CSV Upload  →  POST /api/upload
-      ├── Dataset Statistics Table
-      ├── Class Distribution Pie Chart (ECharts)
-      └── Data Preview Table (first 10 rows)
+```mermaid
+graph TD
+    App["App.jsx (Root)"]
+
+    App --> Header["Header\nNav · Theme Toggle"]
+    App --> Tab1["Tab: Real-time Scorer"]
+    App --> Tab2["Tab: Model Training Hub"]
+    App --> Tab3["Tab: Dataset Explorer"]
+
+    Tab1 --> Sliders["Feature Sliders\nincome · debts · age\npayment_history · credit_cards · loan_amount"]
+    Tab1 --> PredBtn["Predict Button\nPOST /api/predict"]
+    Tab1 --> Gauge["Risk Gauge\n0 – 100%"]
+    Tab1 --> Verdict["Verdict Banner\nGood / Bad Credit"]
+
+    Tab2 --> ModelSel["Algorithm Selector\n8 models"]
+    Tab2 --> TrainBtn["Train Button\nPOST /api/train"]
+    Tab2 --> Metrics["Metrics Cards\nPrecision · Recall · F1 · ROC-AUC"]
+    Tab2 --> Chart1["Benchmark Bar Chart\nECharts"]
+
+    Tab3 --> Upload["CSV Upload\nPOST /api/upload"]
+    Tab3 --> Stats["Statistics Table"]
+    Tab3 --> Chart2["Distribution Pie Chart\nECharts"]
+    Tab3 --> Preview["Data Preview\nfirst 10 rows"]
 ```
 
 ---
 
 ## 💾 Backend State Management
 
-The backend uses a **global in-memory dictionary** shared across requests:
+The backend uses a **global in-memory dictionary** shared across all requests:
 
 ```python
 state = {
@@ -195,24 +168,36 @@ state = {
     "scaler":       None,   # Fitted StandardScaler instance
     "feature_cols": [],     # List of input feature column names
     "model_name":   None,   # Name of the currently active model
-    "metrics":      {}      # Last evaluation metrics dict
+    "metrics":      {}      # Last evaluation: Precision, Recall, F1, ROC-AUC
 }
 ```
 
-> **Note:** This is a single-user, single-session in-memory design.
-> For multi-user production deployments, consider a model registry (e.g. MLflow) or database-backed sessions.
+### State Lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> Empty : App Start
+    Empty --> Loaded : GET /api/data-info\nor POST /api/upload
+    Loaded --> Trained : POST /api/train
+    Trained --> Trained : POST /api/train (retrain)
+    Trained --> Predicting : POST /api/predict
+    Predicting --> Trained : Response Sent
+```
+
+> **Note:** Single-user, single-session design. For production, use a model registry (e.g. MLflow) or database-backed session store.
 
 ---
 
 ## 🔒 Security Model
 
-| Concern | Mitigation |
-|---------|-----------|
-| Secrets exposure | All config in `.env`, excluded via `.gitignore` |
-| Cross-origin requests | CORS restricted via `ALLOWED_ORIGINS` env variable |
-| Malicious input | Pydantic models enforce types at API boundary |
-| File upload abuse | Only `text/csv` MIME accepted; parsed with pandas |
+| Threat | Mitigation |
+|--------|-----------|
+| Secrets in source code | All config in `.env` — excluded via `.gitignore` |
+| Cross-origin attacks | CORS restricted via `ALLOWED_ORIGINS` env variable |
+| Malformed inputs | Pydantic models enforce types and ranges at API boundary |
+| Malicious CSV files | Only `text/csv` MIME accepted; parsed safely with pandas |
 | JSON serialization | All NumPy types cast to native Python before response |
+| Exposed internal files | `.dockerignore`, `.gitignore`, `.env.*` — never pushed |
 
 ---
 
@@ -220,17 +205,17 @@ state = {
 
 ### Backend (`requirements.txt`)
 
-| Package | Purpose |
-|---------|---------|
-| `fastapi` | REST API framework |
-| `uvicorn` | ASGI server |
-| `pydantic` | Request/response validation |
-| `pandas` | DataFrame operations |
-| `numpy` | Numerical computing |
-| `scikit-learn` | ML algorithms & evaluation |
-| `python-multipart` | File upload parsing |
-| `httpx` | Async HTTP client for tests |
-| `pytest` | Test runner |
+| Package | Version | Purpose |
+|---------|:-------:|---------|
+| `fastapi` | 0.137 | REST API framework |
+| `uvicorn` | 0.49 | ASGI server |
+| `pydantic` | 2.x | Request/response validation |
+| `pandas` | 3.x | DataFrame operations |
+| `numpy` | 2.x | Numerical computing |
+| `scikit-learn` | 1.9 | ML algorithms & evaluation |
+| `python-multipart` | 0.0.x | File upload parsing |
+| `httpx` | 0.28 | Async HTTP client for tests |
+| `pytest` | 9.x | Test runner |
 
 ### Frontend (`package.json`)
 
@@ -247,24 +232,20 @@ state = {
 
 ## 🧪 Test Architecture
 
-```
-tests/
-│
-├── test_model_utils.py   (Unit Tests — 10 tests)
-│     ├── test_load_data
-│     ├── test_preprocess_data
-│     └── test_train_model × 8 algorithms
-│
-└── test_server.py        (Integration Tests — 18 tests)
-      ├── GET  /api/data-info  → loaded state
-      ├── GET  /api/data-info  → no dataset state
-      ├── POST /api/train      → each of 8 models
-      ├── POST /api/train      → invalid model name
-      ├── POST /api/predict    → valid inputs
-      ├── POST /api/predict    → missing features
-      ├── POST /api/upload     → valid CSV
-      ├── POST /api/upload     → wrong file type
-      └── POST /api/upload     → missing target column
+```mermaid
+graph LR
+    Tests["tests/"]
+    Tests --> UnitTests["test_model_utils.py\n10 Unit Tests"]
+    Tests --> IntTests["test_server.py\n18 Integration Tests"]
+
+    UnitTests --> U1[test_load_data]
+    UnitTests --> U2[test_preprocess_data]
+    UnitTests --> U3["test_train_model\n× 8 algorithms"]
+
+    IntTests --> I1["GET /api/data-info\nloaded & empty state"]
+    IntTests --> I2["POST /api/train\n8 models + invalid"]
+    IntTests --> I3["POST /api/predict\nvalid + missing features"]
+    IntTests --> I4["POST /api/upload\nCSV + wrong type + no target"]
 ```
 
 ### Running Tests
@@ -273,7 +254,7 @@ tests/
 # Full suite
 python -m pytest
 
-# Verbose
+# With verbose output
 python -m pytest -v
 
 # Specific file
@@ -284,16 +265,16 @@ python -m pytest tests/test_server.py -v
 
 ## 🚧 Future Improvements
 
-| Priority | Improvement | Effort |
-|:--------:|------------|:------:|
-| 🔴 High | Persistent model storage (joblib / pickle) | Medium |
-| 🔴 High | User authentication (JWT / OAuth2) | High |
-| 🟡 Medium | SHAP explainability scores in predictions | Medium |
-| 🟡 Medium | PostgreSQL for multi-session support | High |
-| 🟢 Low | Docker Compose for one-command setup | Low |
-| 🟢 Low | Hyperparameter tuning UI (GridSearch) | Medium |
-| 🟢 Low | Export trained model as `.pkl` download | Low |
+| Priority | Improvement | Effort | Impact |
+|:--------:|-------------|:------:|:------:|
+| 🔴 High | Persistent model storage (joblib) | Medium | High |
+| 🔴 High | User authentication (JWT / OAuth2) | High | High |
+| 🟡 Medium | SHAP explainability in predictions | Medium | Medium |
+| 🟡 Medium | PostgreSQL for multi-session support | High | High |
+| 🟢 Low | Docker Compose one-command setup | Low | Medium |
+| 🟢 Low | Hyperparameter tuning UI (GridSearch) | Medium | Medium |
+| 🟢 Low | Export trained model as `.pkl` download | Low | Low |
 
 ---
 
-*Last updated: June 2026 · [Back to README](./README.md)*
+*Last updated: June 2026 · [← Back to README](./README.md)*
