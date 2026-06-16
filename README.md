@@ -231,7 +231,17 @@ http://localhost:5173
 
 ## 🐳 Docker Setup
 
-Run the entire platform with a single command — no Python or Node.js required.
+> 📖 **Full Docker guide:** [DOCKER.md](./DOCKER.md) — includes installation instructions for Windows, macOS, and Linux.
+
+### Install Docker
+
+| OS | Link |
+|----|------|
+| Windows | https://www.docker.com/products/docker-desktop/ |
+| macOS | https://www.docker.com/products/docker-desktop/ |
+| Linux | `sudo apt-get install docker-ce docker-compose-plugin` |
+
+### Run with One Command
 
 ```bash
 # Clone the repo
@@ -249,9 +259,17 @@ docker compose up --build
 | API Docs | http://localhost:8000/docs |
 
 ```bash
+# Run in background
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
 # Stop all services
 docker compose down
 ```
+
+> See [DOCKER.md](./DOCKER.md) for environment config, troubleshooting, and all Docker commands.
 
 ---
 
