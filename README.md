@@ -1,247 +1,172 @@
-<div align="center">
-
-```
-╔═══════════════════════════════════════════════════════════════╗
-║     ██████╗██████╗ ███████╗██████╗ ██╗████████╗              ║
-║    ██╔════╝██╔══██╗██╔════╝██╔══██╗██║╚══██╔══╝              ║
-║    ██║     ██████╔╝█████╗  ██║  ██║██║   ██║                 ║
-║    ██║     ██╔══██╗██╔══╝  ██║  ██║██║   ██║                 ║
-║    ╚██████╗██║  ██║███████╗██████╔╝██║   ██║                 ║
-║     ╚═════╝╚═╝  ╚═╝╚══════╝╚═════╝ ╚═╝   ╚═╝                ║
-║          RISK  ANALYTICS  PLATFORM  v1.0                      ║
-╚═══════════════════════════════════════════════════════════════╝
-```
-
 # 🏦 Credit Risk Analytics & Simulation Platform
 
-> **Evaluate borrower creditworthiness in real-time using 8 advanced Machine Learning algorithms with interactive dashboards, live predictions, and explainable metrics.**
+> A data-driven platform that uses **8 Machine Learning algorithms** to assess credit risk, predict loan defaults, and evaluate borrower creditworthiness in real-time.
 
-<br/>
-
-[![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.137-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
-[![Vite](https://img.shields.io/badge/Vite-8.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
-[![scikit-learn](https://img.shields.io/badge/scikit--learn-1.9-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org)
-[![Tests](https://img.shields.io/badge/Tests-28%20Passing-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](./tests)
-[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](./LICENSE)
-
-<br/>
-
-```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│  📊 EXPLORE  │────▶│  🤖 TRAIN    │────▶│  ⚡ PREDICT  │
-│   Dataset    │     │  8 ML Models │     │  Real-time   │
-└──────────────┘     └──────────────┘     └──────────────┘
-```
-
-</div>
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/FastAPI-0.137-009688?style=flat-square&logo=fastapi&logoColor=white" />
+  <img src="https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black" />
+  <img src="https://img.shields.io/badge/Vite-8.0-646CFF?style=flat-square&logo=vite&logoColor=white" />
+  <img src="https://img.shields.io/badge/scikit--learn-1.9-F7931E?style=flat-square&logo=scikit-learn&logoColor=white" />
+  <img src="https://img.shields.io/badge/Tests-28%20Passing-28a745?style=flat-square&logo=pytest&logoColor=white" />
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" />
+</p>
 
 ---
 
 ## 📋 Table of Contents
 
-- [✨ Features](#-features)
-- [🏗️ System Architecture](#️-system-architecture)
-- [📊 ML Models & Benchmarks](#-ml-models--benchmarks)
-- [🚀 Quick Start – Clone & Run](#-quick-start--clone--run)
-- [📁 Project Structure](#-project-structure)
-- [🔌 API Reference](#-api-reference)
-- [🧪 Testing](#-testing)
-- [⚙️ Environment Configuration](#️-environment-configuration)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [📈 Performance](#-performance)
+- [Overview](#-overview)
+- [Features](#-features)
+- [System Architecture](#-system-architecture)
+- [ML Models & Benchmarks](#-ml-models--benchmarks)
+- [Dataset Overview](#-dataset-overview)
+- [Getting Started](#-getting-started)
+- [Project Structure](#-project-structure)
+- [API Reference](#-api-reference)
+- [Testing](#-testing)
+- [Tech Stack](#-tech-stack)
+
+---
+
+## 🎯 Overview
+
+The **Credit Risk Analytics Platform** helps financial institutions make smarter lending decisions by evaluating borrower profiles against trained ML models. It features a live scoring dashboard, model comparison charts, and a dataset explorer — all in one responsive web application.
+
+| Component | Technology | Port |
+|-----------|-----------|------|
+| Frontend UI | React + Vite | `5173` |
+| Backend API | Python + FastAPI | `8000` |
+| ML Engine | scikit-learn | — |
+| Data Source | CSV (Pandas) | — |
 
 ---
 
 ## ✨ Features
 
-```
- ╔════════════════════════════════════════════════════════════╗
- ║  CORE CAPABILITIES                                         ║
- ╠════════════════════════════════════════════════════════════╣
- ║  🤖  8 Classification Algorithms (train on-demand)        ║
- ║  ⚡  Real-time Credit Scoring with Confidence Meters       ║
- ║  📂  CSV Upload & Auto Model Training                      ║
- ║  📊  Live Benchmark Comparison Charts (ECharts)            ║
- ║  🌗  Dark / Light Theme Toggle                             ║
- ║  🧪  28 Automated Tests (Model + API)                      ║
- ║  🔒  .env-based Secrets Management                         ║
- ║  📐  Robust JSON Serialization (NaN/Inf safe)              ║
- ╚════════════════════════════════════════════════════════════╝
-```
+| Feature | Description |
+|---------|-------------|
+| 🤖 **8 ML Algorithms** | Train and compare models on-demand |
+| ⚡ **Real-time Scoring** | Live credit score with probability meter |
+| 📂 **CSV Upload** | Upload your own dataset and auto-train |
+| 📊 **Benchmark Charts** | Side-by-side model performance comparison |
+| 🌗 **Theme Toggle** | Dark & Light mode support |
+| 🧪 **28 Automated Tests** | Full model + API test coverage |
+| 🔒 **Secrets Management** | Environment-based config via `.env` |
 
 ---
 
 ## 🏗️ System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        CLIENT BROWSER                           │
-│                                                                 │
-│   ┌─────────────────────────────────────────────────────────┐  │
-│   │              React + Vite Frontend  :5173               │  │
-│   │                                                         │  │
-│   │   ┌──────────────┐  ┌──────────────┐  ┌─────────────┐  │  │
-│   │   │  Real-time   │  │    Model     │  │  Dataset    │  │  │
-│   │   │   Scorer     │  │ Training Hub │  │  Explorer   │  │  │
-│   │   └──────┬───────┘  └──────┬───────┘  └──────┬──────┘  │  │
-│   │          │                 │                  │         │  │
-│   │          └─────────────────┴──────────────────┘         │  │
-│   │                            │  axios HTTP                 │  │
-│   └────────────────────────────┼────────────────────────────┘  │
-└────────────────────────────────┼────────────────────────────────┘
-                                 │ REST API
-┌────────────────────────────────▼────────────────────────────────┐
-│                   FastAPI Backend  :8000                         │
-│                                                                  │
-│   ┌──────────────────────────────────────────────────────────┐  │
-│   │                    API Router                            │  │
-│   │                                                          │  │
-│   │   GET /api/data-info    POST /api/train                  │  │
-│   │   POST /api/predict     POST /api/upload                 │  │
-│   └──────────────────────────────────────────────────────────┘  │
-│                            │                                     │
-│   ┌─────────────────────── ▼ ───────────────────────────────┐   │
-│   │                  model_utils.py                          │   │
-│   │                                                          │   │
-│   │   preprocess_data()   train_model()   load_data()        │   │
-│   └──────────────────────────────────────────────────────────┘   │
-│                            │                                     │
-│   ┌────────────────────────▼────────────────────────────────┐   │
-│   │               scikit-learn ML Engine                     │   │
-│   │                                                          │   │
-│   │   LogReg  │  DTree  │  RF  │  GBM  │  Ada  │  KNN      │   │
-│   │                   NaiveBayes  │  SVM                     │   │
-│   └──────────────────────────────────────────────────────────┘   │
-│                            │                                     │
-│   ┌────────────────────────▼────────────────────────────────┐   │
-│   │              In-Memory State (Global)                    │   │
-│   │                                                          │   │
-│   │   df  │  model  │  scaler  │  features  │  metrics      │   │
-│   └──────────────────────────────────────────────────────────┘   │
-└──────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│                    BROWSER  :5173                        │
+│                                                          │
+│   ┌─────────────┐  ┌─────────────┐  ┌───────────────┐  │
+│   │  Real-time  │  │   Model     │  │   Dataset     │  │
+│   │   Scorer    │  │ Training Hub│  │   Explorer    │  │
+│   └──────┬──────┘  └──────┬──────┘  └──────┬────────┘  │
+│          └────────────────┴─────────────────┘           │
+│                           │  HTTP / Axios               │
+└───────────────────────────┼─────────────────────────────┘
                             │
-┌───────────────────────────▼──────────────────────────────────────┐
-│                    credit_data.csv  (5000 rows)                   │
-│                                                                   │
-│   income │ debts │ payment_history │ age │ credit_cards │ target  │
-└───────────────────────────────────────────────────────────────────┘
-```
-
-### Data Flow Diagram
-
-```
-  User Input
-      │
-      ▼
-  ┌─────────┐    CSV Upload     ┌────────────────┐
-  │ Browser │ ───────────────▶ │  /api/upload   │
-  │  (React)│                  │  Auto-trains   │
-  └────┬────┘                  │  LogReg        │
-       │                       └────────────────┘
-       │ Select Algorithm
-       ▼
-  ┌─────────┐  POST model_name  ┌────────────────┐
-  │ Trainer │ ───────────────▶ │  /api/train    │──▶ StandardScaler
-  │   Tab   │                  │  Fits model    │──▶ ML Algorithm
-  └─────────┘                  └────────────────┘──▶ Returns Metrics
-       │
-       │ Adjust sliders
-       ▼
-  ┌─────────┐  POST inputs      ┌────────────────┐
-  │ Scorer  │ ───────────────▶ │  /api/predict  │──▶ Scale Input
-  │   Tab   │                  │  Returns:      │──▶ model.predict()
-  └─────────┘                  │  prediction    │──▶ predict_proba()
-                               │  probability   │
-                               └────────────────┘
+┌───────────────────────────▼─────────────────────────────┐
+│                  FastAPI Backend  :8000                  │
+│                                                          │
+│   GET  /api/data-info     POST /api/train               │
+│   POST /api/predict        POST /api/upload              │
+│                            │                             │
+│   ┌────────────────────────▼──────────────────────────┐ │
+│   │              model_utils.py                       │ │
+│   │   load → preprocess → scale → train → evaluate   │ │
+│   └────────────────────────┬──────────────────────────┘ │
+│                            │                             │
+│   ┌────────────────────────▼──────────────────────────┐ │
+│   │          In-Memory State (Global Dict)            │ │
+│   │   df | model | scaler | features | metrics        │ │
+│   └───────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────┘
+                            │
+┌───────────────────────────▼─────────────────────────────┐
+│           credit_data.csv  (5,000 records)               │
+│   income │ debts │ payment_history │ age │ target        │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## 📊 ML Models & Benchmarks
 
-### Supported Classification Algorithms
+### Supported Algorithms
 
-| # | Algorithm | Type | Speed | Interpretability | Best For |
-|---|-----------|------|-------|-----------------|---------|
-| 1 | **Logistic Regression** | Linear | ⚡⚡⚡ | ⭐⭐⭐ | Baseline, linear data |
-| 2 | **Decision Tree** | Tree | ⚡⚡⚡ | ⭐⭐⭐ | Rule extraction |
-| 3 | **Random Forest** | Ensemble | ⚡⚡ | ⭐⭐ | General purpose |
-| 4 | **Gradient Boosting** | Ensemble | ⚡ | ⭐⭐ | High accuracy |
-| 5 | **AdaBoost** | Ensemble | ⚡⚡ | ⭐⭐ | Noisy-free data |
-| 6 | **K-Nearest Neighbors** | Instance | ⚡ | ⭐⭐⭐ | Small datasets |
-| 7 | **Naive Bayes** | Probabilistic | ⚡⚡⚡ | ⭐⭐⭐ | Quick baseline |
-| 8 | **Support Vector Machine** | Kernel | ⚡ | ⭐ | High-dimensional |
+| # | Algorithm | Type | Speed | Best For |
+|---|-----------|------|:-----:|---------|
+| 1 | Logistic Regression | Linear | ⚡⚡⚡ | Baseline & linear data |
+| 2 | Decision Tree | Tree-based | ⚡⚡⚡ | Interpretable rules |
+| 3 | Random Forest | Ensemble | ⚡⚡ | General purpose |
+| 4 | Gradient Boosting | Ensemble | ⚡ | Highest accuracy |
+| 5 | AdaBoost | Ensemble | ⚡⚡ | Low-noise datasets |
+| 6 | K-Nearest Neighbors | Instance-based | ⚡ | Small datasets |
+| 7 | Naive Bayes | Probabilistic | ⚡⚡⚡ | Quick baseline |
+| 8 | Support Vector Machine | Kernel-based | ⚡ | High-dimensional data |
 
-### Performance Benchmarks (Reference)
+### Performance Comparison
 
-| Algorithm | Precision | Recall | F1-Score | ROC-AUC | Rank |
-|-----------|:---------:|:------:|:--------:|:-------:|:----:|
-| 🥇 Gradient Boosting | **0.87** | **0.85** | **0.86** | **0.93** | 1st |
-| 🥈 Random Forest | 0.86 | 0.84 | 0.85 | 0.92 | 2nd |
-| 🥉 Support Vector Machine | 0.85 | 0.82 | 0.83 | 0.91 | 3rd |
-| AdaBoost | 0.84 | 0.83 | 0.83 | 0.90 | 4th |
-| Logistic Regression | 0.82 | 0.79 | 0.80 | 0.88 | 5th |
-| Naive Bayes | 0.80 | 0.74 | 0.77 | 0.85 | 6th |
-| K-Nearest Neighbors | 0.79 | 0.77 | 0.78 | 0.82 | 7th |
-| Decision Tree | 0.76 | 0.78 | 0.77 | 0.77 | 8th |
-
-### Dataset Overview
-
-| Feature | Type | Range | Description |
-|---------|------|-------|-------------|
-| `income` | Continuous | 20K – 120K | Annual income in USD |
-| `debts` | Continuous | 1K – 48K | Total outstanding debts |
-| `payment_history` | Ordinal | 0 – 5 | Past payment behavior score |
-| `age` | Discrete | 18 – 70 | Borrower age in years |
-| `credit_cards` | Discrete | 0 – 5 | Number of active credit cards |
-| `loan_amount` | Continuous | 2K – 57K | Requested loan amount |
-| `target` | Binary | 0 / 1 | **0** = Bad Credit, **1** = Good Credit |
-
-```
-  Dataset Distribution (5,000 records)
-  
-  Good Credit ████████████████████████████ ~50%
-  Bad Credit  █████████████████████████    ~50%
-  
-  Training Set  ████████████████████████████████████████ 80% (4,000)
-  Test Set      ██████████ 20% (1,000)
-```
+| Algorithm | Precision | Recall | F1-Score | ROC-AUC |
+|-----------|:---------:|:------:|:--------:|:-------:|
+| 🥇 Gradient Boosting | **0.87** | **0.85** | **0.86** | **0.93** |
+| 🥈 Random Forest | 0.86 | 0.84 | 0.85 | 0.92 |
+| 🥉 SVM | 0.85 | 0.82 | 0.83 | 0.91 |
+| AdaBoost | 0.84 | 0.83 | 0.83 | 0.90 |
+| Logistic Regression | 0.82 | 0.79 | 0.80 | 0.88 |
+| Naive Bayes | 0.80 | 0.74 | 0.77 | 0.85 |
+| KNN | 0.79 | 0.77 | 0.78 | 0.82 |
+| Decision Tree | 0.76 | 0.78 | 0.77 | 0.77 |
 
 ---
 
-## 🚀 Quick Start – Clone & Run
+## 📁 Dataset Overview
+
+| Feature | Type | Range | Description |
+|---------|------|-------|-------------|
+| `income` | Continuous | 20K – 120K | Annual income (USD) |
+| `debts` | Continuous | 1K – 48K | Total outstanding debts |
+| `payment_history` | Ordinal | 0 – 5 | Past payment behavior score |
+| `age` | Discrete | 18 – 70 | Borrower age |
+| `credit_cards` | Discrete | 0 – 5 | Number of active credit cards |
+| `loan_amount` | Continuous | 2K – 57K | Requested loan amount |
+| `target` | Binary | 0 / 1 | `0` = Bad Credit · `1` = Good Credit |
+
+> **5,000 total records** — 80% training / 20% test split
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
-```
-  ✅  Python 3.10+
-  ✅  Node.js 18+
-  ✅  npm 9+
-  ✅  Git
-```
+- Python `3.10+`
+- Node.js `18+`
+- npm `9+`
+- Git
 
 ### Step 1 — Clone the Repository
 
 ```bash
-# Clone via HTTPS
-git clone https://github.com/YOUR_USERNAME/credit-scoring-model.git
-
-# Navigate into the project
-cd credit-scoring-model
+git clone https://github.com/chandru-collab/Credit-Risk-Analytics-Platform.git
+cd Credit-Risk-Analytics-Platform
 ```
 
-### Step 2 — Backend Setup (Python + FastAPI)
+### Step 2 — Backend Setup
 
 ```bash
-# Create virtual environment
+# Create and activate virtual environment
 python -m venv .venv
 
-# Activate it
-# Windows:
+# Windows
 .venv\Scripts\activate
-# macOS / Linux:
+
+# macOS / Linux
 source .venv/bin/activate
 
 # Install dependencies
@@ -251,91 +176,84 @@ pip install -r requirements.txt
 ### Step 3 — Configure Environment
 
 ```bash
-# Copy the example env file
-cp .env.example .env
-
-# Open .env and adjust values if needed (defaults work out of the box)
+# Create your local env file
+copy .env.example .env      # Windows
+cp .env.example .env        # macOS / Linux
 ```
 
-### Step 4 — Start the Backend Server
+Edit `.env` with your values:
+
+```env
+HOST=127.0.0.1
+PORT=8000
+ALLOWED_ORIGINS=http://localhost:5173
+DEFAULT_DATASET_PATH=credit_data.csv
+DEFAULT_MODEL=Random Forest
+```
+
+### Step 4 — Start Backend
 
 ```bash
 python server.py
-# ✅  Uvicorn running on http://127.0.0.1:8000
-# ✅  Default dataset loaded & Random Forest auto-trained
+# ✅ Uvicorn running on http://127.0.0.1:8000
 ```
 
-### Step 5 — Frontend Setup (React + Vite)
+### Step 5 — Start Frontend
 
 ```bash
-# Open a new terminal, navigate to frontend
+# Open a new terminal
 cd frontend
-
-# Install Node dependencies
 npm install
-
-# Start the dev server
 npm run dev
-# ✅  VITE ready → http://localhost:5173
+# ✅ VITE ready → http://localhost:5173
 ```
 
-### Step 6 — Open the App 🎉
+### Step 6 — Open the App
 
 ```
-  Browser → http://localhost:5173
-  
-  ┌────────────────────────────────────────────┐
-  │   Credit Risk Analytics Platform           │
-  │                                            │
-  │   [Real-time Scorer] [Training Hub] [Data] │
-  │                                            │
-  │   ✅ Backend connected – 5,000 records     │
-  └────────────────────────────────────────────┘
+http://localhost:5173
 ```
 
 ---
 
-## 📁 Project Structure
+## 📂 Project Structure
 
 ```
-credit-scoring-model/
+Credit-Risk-Analytics-Platform/
 │
-├── 📄 server.py              ← FastAPI application & all API endpoints
-├── 📄 model_utils.py         ← ML preprocessing & training logic
-├── 📄 credit_data.csv        ← Default dataset (5,000 records)
-├── 📄 requirements.txt       ← Python dependencies
-├── 📄 .env                   ← Local secrets (git-ignored)
-├── 📄 .env.example           ← Environment template (committed)
-├── 📄 .gitignore             ← Git ignore rules
+├── server.py                   ← FastAPI app & all API endpoints
+├── model_utils.py              ← ML preprocessing & training logic
+├── credit_data.csv             ← Default dataset (5,000 records)
+├── requirements.txt            ← Python dependencies
 │
-├── 📁 tests/
-│   ├── 📄 test_model_utils.py ← Unit tests for ML logic (10 tests)
-│   └── 📄 test_server.py      ← API integration tests (18 tests)
+├── tests/
+│   ├── test_model_utils.py     ← Unit tests for ML logic (10 tests)
+│   └── test_server.py          ← API integration tests (18 tests)
 │
-└── 📁 frontend/
-    ├── 📄 index.html          ← HTML entry point
-    ├── 📄 package.json        ← Node dependencies & scripts
-    ├── 📄 vite.config.js      ← Vite configuration
-    └── 📁 src/
-        ├── 📄 main.jsx        ← React entry point
-        ├── 📄 App.jsx         ← Main application component
-        ├── 📄 App.css         ← Component styles
-        └── 📄 index.css       ← Global design system
+└── frontend/
+    ├── index.html
+    ├── package.json
+    ├── vite.config.js
+    └── src/
+        ├── main.jsx
+        ├── App.jsx             ← Main application component
+        ├── App.css
+        └── index.css
 ```
 
 ---
 
 ## 🔌 API Reference
 
-| Method | Endpoint | Description | Request Body | Response |
-|--------|----------|-------------|-------------|---------|
-| `GET` | `/` | Health check | — | `{ message }` |
-| `GET` | `/api/data-info` | Dataset stats + active model metrics | — | `{ columns, statistics, preview, target_distribution, rows_count, model_name, metrics }` |
-| `POST` | `/api/train` | Train a selected ML model | `{ model_name }` | `{ status, model_name, metrics }` |
-| `POST` | `/api/predict` | Predict credit risk for input | `{ inputs: { feature: value } }` | `{ prediction, probability, model_name }` |
-| `POST` | `/api/upload` | Upload CSV and auto-train | `multipart/form-data` (file) | Dataset info + model metrics |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/` | Health check |
+| `GET` | `/api/data-info` | Dataset stats + active model metrics |
+| `POST` | `/api/train` | Train a selected ML model |
+| `POST` | `/api/predict` | Predict credit risk for input |
+| `POST` | `/api/upload` | Upload CSV and auto-train |
 
-### Example: Train a Model
+### Train a Model
 
 ```bash
 curl -X POST http://localhost:8000/api/train \
@@ -356,7 +274,7 @@ curl -X POST http://localhost:8000/api/train \
 }
 ```
 
-### Example: Run a Prediction
+### Run a Prediction
 
 ```bash
 curl -X POST http://localhost:8000/api/predict \
@@ -386,121 +304,51 @@ curl -X POST http://localhost:8000/api/predict \
 ## 🧪 Testing
 
 ```bash
-# Activate virtual environment first
-.venv\Scripts\activate   # Windows
-source .venv/bin/activate  # macOS/Linux
-
-# Run full test suite
+# Run all 28 tests
 python -m pytest
 
-# Run with verbose output
+# Verbose output
 python -m pytest -v
 
-# Run only model logic tests
+# Run specific test files
 python -m pytest tests/test_model_utils.py -v
-
-# Run only API tests
 python -m pytest tests/test_server.py -v
 ```
 
 ### Test Coverage
 
-```
-  Test Results ──────────────────────────────────────────
-  
-  test_model_utils.py   ██████████  10 / 10 passed ✅
-  test_server.py        ██████████  18 / 18 passed ✅
-  
-  Total                 ██████████  28 / 28 passed ✅
-  Duration              ~14.6 seconds
-  
-  Tests cover:
-  ├── Data preprocessing (dropna, scaling, feature split)
-  ├── Model training for all 8 algorithms
-  ├── GET /api/data-info (loaded & unloaded states)
-  ├── POST /api/predict (valid & missing features)
-  ├── POST /api/train (all 8 models + invalid name)
-  └── POST /api/upload (CSV, wrong type, missing target)
-```
-
----
-
-## ⚙️ Environment Configuration
-
-```bash
-# .env (copy from .env.example — never commit this file)
-
-HOST=127.0.0.1                              # Server bind address
-PORT=8000                                   # Server port
-ALLOWED_ORIGINS=http://localhost:5173       # CORS allowed origins
-DEFAULT_DATASET_PATH=credit_data.csv        # Dataset file path
-DEFAULT_MODEL=Random Forest                 # Auto-trained model on startup
-```
+| Test File | Tests | Coverage |
+|-----------|------:|---------|
+| `test_model_utils.py` | 10 | Data loading, preprocessing, all 8 model trains |
+| `test_server.py` | 18 | All endpoints, edge cases, error handling |
+| **Total** | **28** | **100% passing ✅** |
 
 ---
 
 ## 🛠️ Tech Stack
 
-```
-  ┌─────────────────────────────────────────────────────┐
-  │  BACKEND                                            │
-  │                                                     │
-  │  Python 3.12     ────  Core language                │
-  │  FastAPI 0.137   ────  REST API framework           │
-  │  Uvicorn 0.49    ────  ASGI server                  │
-  │  scikit-learn    ────  ML algorithms & metrics      │
-  │  pandas 3.x      ────  Data manipulation            │
-  │  numpy 2.x       ────  Numerical operations         │
-  │  pydantic 2.x    ────  Request/Response validation  │
-  └─────────────────────────────────────────────────────┘
-  
-  ┌─────────────────────────────────────────────────────┐
-  │  FRONTEND                                           │
-  │                                                     │
-  │  React 18        ────  UI component library         │
-  │  Vite 8          ────  Build tool & dev server      │
-  │  ECharts         ────  Charts & visualizations      │
-  │  Axios           ────  HTTP client                  │
-  │  Lucide React    ────  Icon library                 │
-  │  Vanilla CSS     ────  Custom design system         │
-  └─────────────────────────────────────────────────────┘
-  
-  ┌─────────────────────────────────────────────────────┐
-  │  TOOLING                                            │
-  │                                                     │
-  │  pytest 9.1      ────  Test framework               │
-  │  httpx 0.28      ────  HTTP test client             │
-  │  Git             ────  Version control              │
-  └─────────────────────────────────────────────────────┘
-```
+### Backend
 
----
+| Package | Version | Purpose |
+|---------|---------|---------|
+| Python | 3.12 | Core language |
+| FastAPI | 0.137 | REST API framework |
+| Uvicorn | 0.49 | ASGI server |
+| scikit-learn | 1.9 | ML algorithms & metrics |
+| Pandas | 3.x | Data manipulation |
+| NumPy | 2.x | Numerical operations |
+| Pydantic | 2.x | Request validation |
+| pytest + httpx | 9.x / 0.28 | Testing framework |
 
-## 📈 Performance
+### Frontend
 
-```
-  API Response Times (approximate)
-  ─────────────────────────────────────────────
-  GET  /api/data-info          ~  5 ms
-  POST /api/predict            ~ 10 ms
-  POST /api/train (LogReg)     ~ 200 ms
-  POST /api/train (Random Forest)  ~ 800 ms
-  POST /api/train (Gradient Boosting) ~ 2 s
-  POST /api/train (SVM)        ~ 3 s
-  POST /api/upload (5000 rows) ~ 1 s
-```
-
----
-
-## 🤝 Contributing
-
-```
-  1.  Fork the repository
-  2.  Create your feature branch  →  git checkout -b feature/amazing-feature
-  3.  Commit your changes         →  git commit -m 'Add amazing feature'
-  4.  Push to the branch          →  git push origin feature/amazing-feature
-  5.  Open a Pull Request
-```
+| Package | Purpose |
+|---------|---------|
+| React 18 | UI component library |
+| Vite 8 | Build tool & dev server |
+| ECharts | Charts & visualizations |
+| Axios | HTTP client |
+| Lucide React | Icon library |
 
 ---
 
@@ -510,14 +358,8 @@ This project is licensed under the **MIT License**.
 
 ---
 
-<div align="center">
-
-```
-  Built with ❤️ using Python, FastAPI, React & scikit-learn
-  
+<p align="center">
+  Built with ❤️ using Python · FastAPI · React · scikit-learn
+  <br/>
   ⭐ Star this repo if you found it useful!
-```
-
-[![GitHub stars](https://img.shields.io/github/stars/YOUR_USERNAME/credit-scoring-model?style=social)](https://github.com/YOUR_USERNAME/credit-scoring-model)
-
-</div>
+</p>
