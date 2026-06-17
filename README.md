@@ -31,7 +31,6 @@
 | [🔌 API Reference](#-api-reference) | Endpoints and examples |
 | [🧪 Testing](#-testing) | Test suite details |
 | [🛠️ Tech Stack](#️-tech-stack) | All dependencies |
-| [🧱 Detailed Architecture](#-detailed-architecture) | Three-tier system deep-dive |
 | [🔁 Request Lifecycle](#-request-lifecycle) | Training & prediction sequences |
 | [🧬 ML Pipeline](#-ml-pipeline) | Step-by-step ML process |
 | [🖥️ Frontend Components](#️-frontend-component-tree) | React component hierarchy |
@@ -422,38 +421,6 @@ python -m pytest tests/test_server.py -v
 | ECharts | Charts & visualizations |
 | Axios | HTTP client |
 | Lucide React | SVG icon set |
-
----
-
-## 🧱 Detailed Architecture
-
-The platform uses a **Three-Tier Architecture**:
-
-```mermaid
-graph TB
-    subgraph Tier1["Tier 1 — Presentation  :5173"]
-        A[Real-time Scorer]
-        B[Model Training Hub]
-        C[Dataset Explorer]
-    end
-
-    subgraph Tier2["Tier 2 — Application  :8000"]
-        D[FastAPI Router]
-        E[model_utils.py]
-        F[In-Memory State]
-    end
-
-    subgraph Tier3["Tier 3 — Data"]
-        G[(credit_data.csv)]
-    end
-
-    A -->|HTTP POST /api/predict| D
-    B -->|HTTP POST /api/train| D
-    C -->|HTTP GET /api/data-info\nHTTP POST /api/upload| D
-    D --> E
-    E --> F
-    F -.->|read/write| G
-```
 
 ---
 
