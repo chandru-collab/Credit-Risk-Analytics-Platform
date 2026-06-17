@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, Component, useCallback } from 'react';
 import axios from 'axios';
 import ReactECharts from 'echarts-for-react';
 import {
@@ -10,21 +10,60 @@ import {
   ShieldAlert,
   CheckCircle2,
   AlertTriangle,
-  ArrowRight,
-  BookOpen,
   User,
   DollarSign,
   CreditCard,
   Calendar,
   Activity,
   Info,
-  ChevronRight,
   Sparkles,
   Percent
 } from 'lucide-react';
 import './App.css';
 
-const API_BASE = 'http://localhost:8000/api';
+// ─── API Configuration ──────────────────────────────────────────
+// In production (Docker/Nginx), relative URL is used via proxy.
+// In development, Vite's proxy config handles the forwarding.
+const API_BASE = '/api';
+
+// Configure axios defaults
+axios.defaults.timeout = 30000; // 30-second timeout
+
+// ─── Error Boundary ─────────────────────────────────────────────
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('ErrorBoundary caught:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="error-boundary-fallback">
+          <ShieldAlert size={48} />
+          <h2>Something went wrong</h2>
+          <p>The application encountered an unexpected error. Please refresh the page to try again.</p>
+          <button
+            className="btn btn-primary"
+            style={{ width: 'auto', marginTop: '1rem' }}
+            onClick={() => window.location.reload()}
+          >
+            Refresh Page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 function App() {
   // Theme state
@@ -54,14 +93,20 @@ function App() {
     }
   }, [darkMode]);
 
-  // Initial load
-  useEffect(() => {
-    fetchDataInfo();
+  const initializeInputs = useCallback((stats) => {
+    const defaults = {};
+    Object.keys(stats).forEach((feature) => {
+      defaults[feature] = parseFloat(stats[feature].mean.toFixed(2));
+    });
+    setInputValues(defaults);
+    setPredictionResult(null);
   }, []);
 
-  const fetchDataInfo = async () => {
-    setLoading(true);
-    setError(null);
+  const fetchDataInfo = useCallback(async () => {
+    Promise.resolve().then(() => {
+      setLoading(true);
+      setError(null);
+    });
     try {
       const response = await axios.get(`${API_BASE}/data-info`);
       setDataInfo(response.data);
@@ -72,20 +117,21 @@ function App() {
       initializeInputs(response.data.statistics);
     } catch (err) {
       console.error(err);
-      setError('Failed to connect to the backend server. Make sure the FastAPI server is running on localhost:8000.');
+      if (err.code === 'ECONNABORTED') {
+        setError('Request timed out. The server may be under heavy load — please try again.');
+      } else {
+        setError('Failed to connect to the backend server. Make sure the FastAPI server is running on localhost:8000.');
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, [initializeInputs]);
 
-  const initializeInputs = (stats) => {
-    const defaults = {};
-    Object.keys(stats).forEach((feature) => {
-      defaults[feature] = parseFloat(stats[feature].mean.toFixed(2));
-    });
-    setInputValues(defaults);
-    setPredictionResult(null);
-  };
+  // Initial load
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchDataInfo();
+  }, [fetchDataInfo]);
 
   // Handle File Upload
   const handleFileUpload = async (e) => {
@@ -102,6 +148,7 @@ function App() {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        timeout: 60000, // 60s for uploads
       });
       setDataInfo(response.data);
       if (response.data.model_name) {
@@ -111,7 +158,15 @@ function App() {
       setActiveTab('explorer');
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.detail || 'Failed to upload CSV file.');
+      if (!err.response) {
+        setError('Failed to connect to the backend server. Make sure the FastAPI server is running.');
+      } else if (err.response.status === 413) {
+        setError('File is too large. Maximum allowed size is 10 MB.');
+      } else if (err.response.status === 429) {
+        setError('Too many upload requests. Please wait a moment and try again.');
+      } else {
+        setError(err.response.data?.detail || 'Failed to upload CSV file.');
+      }
     } finally {
       setUploading(false);
     }
@@ -134,7 +189,13 @@ function App() {
       }
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.detail || 'Failed to train the selected model.');
+      if (!err.response) {
+        setError('Failed to connect to the backend server. Make sure the FastAPI server is running.');
+      } else if (err.response.status === 429) {
+        setError('Too many training requests. Please wait a moment and try again.');
+      } else {
+        setError(err.response.data?.detail || 'Failed to train the selected model.');
+      }
     } finally {
       setTraining(false);
     }
@@ -151,7 +212,13 @@ function App() {
       setPredictionResult(response.data);
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.detail || 'Failed to calculate prediction.');
+      if (!err.response) {
+        setError('Failed to connect to the backend server. Make sure the FastAPI server is running.');
+      } else if (err.response.status === 429) {
+        setError('Too many prediction requests. Please wait a moment and try again.');
+      } else {
+        setError(err.response.data?.detail || 'Failed to calculate prediction.');
+      }
     } finally {
       setPredicting(false);
     }
@@ -287,7 +354,7 @@ function App() {
     return (
       <div className="fullscreen-loader">
         <div className="spinner spinner-large"></div>
-        <p style={{ color: 'var(--text-secondary)' }}>Setting up workspace & analyzing credit data...</p>
+        <p style={{ color: 'var(--text-secondary)' }}>Setting up workspace &amp; analyzing credit data...</p>
       </div>
     );
   }
@@ -318,7 +385,7 @@ function App() {
         <div className="info-alert" style={{ background: 'var(--error-bg)', borderColor: 'var(--error-border)', color: 'var(--error-text)' }}>
           <ShieldAlert size={20} className="info-alert-icon" />
           <div>
-            <h4 style={{ fontWeight: 700 }}>Connection Error</h4>
+            <h4 style={{ fontWeight: 700 }}>Error</h4>
             <p>{error}</p>
           </div>
         </div>
@@ -686,4 +753,13 @@ function App() {
   );
 }
 
-export default App;
+// Wrap App with ErrorBoundary
+function AppWithErrorBoundary() {
+  return (
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
+  );
+}
+
+export default AppWithErrorBoundary;

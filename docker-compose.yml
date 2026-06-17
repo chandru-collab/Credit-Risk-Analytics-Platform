@@ -2,8 +2,6 @@
 #  Docker Compose — Credit Risk Analytics Platform
 # ─────────────────────────────────────────────────────────────
 
-version: "3.9"
-
 services:
 
   # ── FastAPI Backend ─────────────────────────────────────────
@@ -20,15 +18,29 @@ services:
       - ALLOWED_ORIGINS=http://localhost,http://localhost:80,http://frontend
       - DEFAULT_DATASET_PATH=credit_data.csv
       - DEFAULT_MODEL=Random Forest
+      - MAX_UPLOAD_SIZE_MB=10
     volumes:
       - ./backend/credit_data.csv:/app/credit_data.csv:ro
+      - model_data:/app/models
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 10s
+      start_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # ── React Frontend (Nginx) ──────────────────────────────────
   frontend:
@@ -42,6 +54,22 @@ services:
       backend:
         condition: service_healthy
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.5"
+        reservations:
+          memory: 64M
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+volumes:
+  model_data:
+    name: credit_risk_models
 
 networks:
   default:

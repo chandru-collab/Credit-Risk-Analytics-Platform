@@ -621,3 +621,27 @@
   gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
+
+/* Error Boundary Fallback */
+.error-boundary-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-primary);
+  gap: 0.75rem;
+}
+
+.error-boundary-fallback h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.error-boundary-fallback p {
+  color: var(--text-secondary);
+  max-width: 420px;
+  font-size: 0.95rem;
+}

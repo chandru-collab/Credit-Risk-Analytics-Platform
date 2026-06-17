@@ -38,6 +38,24 @@ def test_api_root_endpoint():
         assert response.status_code == 200
         assert "endpoints are under" in response.json()["message"]
 
+def test_health_endpoint():
+    with TestClient(app) as client:
+        response = client.get("/api/v1/health")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["status"] == "healthy"
+        assert "version" in data
+        assert "model_loaded" in data
+        assert "active_model" in data
+        assert "dataset_loaded" in data
+        assert "dataset_rows" in data
+
+def test_health_legacy_endpoint():
+    with TestClient(app) as client:
+        response = client.get("/api/health")
+        assert response.status_code == 200
+        assert response.json()["status"] == "healthy"
+
 def test_get_data_info_unloaded():
     with TestClient(app) as client:
         state["df"] = None
@@ -57,6 +75,13 @@ def test_get_data_info_loaded():
         assert "target_distribution" in data
         assert "rows_count" in data
         assert data["model_name"] is not None
+
+def test_get_data_info_v1():
+    with TestClient(app) as client:
+        response = client.get("/api/v1/data-info")
+        assert response.status_code == 200
+        data = response.json()
+        assert "columns" in data
 
 def test_predict_success():
     with TestClient(app) as client:

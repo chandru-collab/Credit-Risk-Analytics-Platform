@@ -1,0 +1,17 @@
+# Backend .dockerignore
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+.env
+.env.*
+frontend/
+tests/
+.git/
+.gitignore
+*.md
+scratchpad_*.md
