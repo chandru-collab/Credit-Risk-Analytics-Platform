@@ -22,9 +22,9 @@ import {
 import './App.css';
 
 // ─── API Configuration ──────────────────────────────────────────
-// In production (Docker/Nginx), relative URL is used via proxy.
-// In development, Vite's proxy config handles the forwarding.
-const API_BASE = '/api';
+// In production (Docker/Nginx/Vercel), we support setting a custom API base URL.
+// Falls back to relative '/api' for Docker/Nginx and Vite proxy compatibility.
+const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
 // Configure axios defaults
 axios.defaults.timeout = 30000; // 30-second timeout
