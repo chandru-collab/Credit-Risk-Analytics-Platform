@@ -233,45 +233,49 @@ http://localhost:5173
 
 ## 🐳 Docker Setup
 
-> 📖 **Full Docker guide:** [DOCKER.md](./DOCKER.md) — includes installation instructions for Windows, macOS, and Linux.
 
 ### Install Docker
 
-| OS | Link |
-|----|------|
-| Windows | https://www.docker.com/products/docker-desktop/ |
-| macOS | https://www.docker.com/products/docker-desktop/ |
+| OS | Download |
+|----|----------|
+| Windows | [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/) |
+| macOS | [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/) |
 | Linux | `sudo apt-get install docker-ce docker-compose-plugin` |
 
-### Run with One Command
+### Quick Start — Run with One Command
 
 ```bash
-# Clone the repo
+# Step 1: Clone the repository
 git clone https://github.com/chandru-collab/Credit-Risk-Analytics-Platform.git
 cd Credit-Risk-Analytics-Platform
 
-# Build and start both services
+# Step 2: Build and start all services
 docker compose up --build
 ```
 
+Both services will be available once ready:
+
 | Service | URL |
 |---------|-----|
-| Frontend | http://localhost |
-| Backend API | http://localhost:8000 |
-| API Docs | http://localhost:8000/docs |
+| 🌐 Frontend | http://localhost |
+| ⚙️ Backend API | http://localhost:8000 |
+| 📄 API Docs (Swagger) | http://localhost:8000/docs |
+
+### Common Commands
 
 ```bash
-# Run in background
+# Run in background (detached mode)
 docker compose up -d
 
-# View logs
+# View real-time logs
 docker compose logs -f
 
 # Stop all services
 docker compose down
-```
 
-> See [DOCKER.md](./DOCKER.md) for environment config, troubleshooting, and all Docker commands.
+# Rebuild after code changes
+docker compose up --build
+```
 
 ---
 
