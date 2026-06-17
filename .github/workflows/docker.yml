@@ -22,7 +22,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./backend
-          dockerfile: Dockerfile
+          file: ./backend/Dockerfile
           push: false
           tags: credit-risk-backend:latest
           cache-from: type=gha
@@ -43,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
-          dockerfile: Dockerfile
+          file: ./frontend/Dockerfile
           push: false
           tags: credit-risk-frontend:latest
           cache-from: type=gha
