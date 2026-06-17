@@ -9,9 +9,6 @@
   <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite"/>
   <img src="https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white" alt="sklearn"/>
   <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"/>
-  <img src="https://github.com/chandru-collab/Credit-Risk-Analytics-Platform/actions/workflows/ci.yml/badge.svg" alt="CI Tests"/>
-  <img src="https://github.com/chandru-collab/Credit-Risk-Analytics-Platform/actions/workflows/docker.yml/badge.svg" alt="Docker Build"/>
-  <img src="https://img.shields.io/badge/Tests-28%20Passing-28a745?style=for-the-badge&logo=pytest&logoColor=white" alt="Tests"/>
 </p>
 
 ---
