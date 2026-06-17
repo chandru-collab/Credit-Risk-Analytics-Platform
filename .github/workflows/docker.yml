@@ -43,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
-          dockerfile: frontend/Dockerfile
+          dockerfile: Dockerfile
           push: false
           tags: credit-risk-frontend:latest
           cache-from: type=gha
