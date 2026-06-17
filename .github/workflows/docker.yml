@@ -21,7 +21,7 @@ jobs:
       - name: Build backend Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./backend
           dockerfile: Dockerfile
           push: false
           tags: credit-risk-backend:latest

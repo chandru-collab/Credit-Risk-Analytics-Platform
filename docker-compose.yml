@@ -9,7 +9,7 @@ services:
   # ── FastAPI Backend ─────────────────────────────────────────
   backend:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     container_name: credit_risk_backend
     ports:
@@ -21,7 +21,7 @@ services:
       - DEFAULT_DATASET_PATH=credit_data.csv
       - DEFAULT_MODEL=Random Forest
     volumes:
-      - ./credit_data.csv:/app/credit_data.csv:ro
+      - ./backend/credit_data.csv:/app/credit_data.csv:ro
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]

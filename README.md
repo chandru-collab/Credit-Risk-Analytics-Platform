@@ -171,6 +171,9 @@ cd Credit-Risk-Analytics-Platform
 ### Step 2 — Backend Setup
 
 ```bash
+# Navigate to the backend directory
+cd backend
+
 # Create virtual environment
 python -m venv .venv
 
@@ -187,10 +190,10 @@ pip install -r requirements.txt
 ### Step 3 — Configure Environment
 
 ```bash
-# Windows
+# Windows (run from the backend directory)
 copy .env.example .env
 
-# macOS / Linux
+# macOS / Linux (run from the backend directory)
 cp .env.example .env
 ```
 
@@ -207,6 +210,7 @@ DEFAULT_MODEL=Random Forest
 ### Step 4 — Start the Backend
 
 ```bash
+# Run from the backend directory
 python server.py
 # ✅ Uvicorn running on http://127.0.0.1:8000
 ```
@@ -214,6 +218,7 @@ python server.py
 ### Step 5 — Start the Frontend
 
 ```bash
+# From the project root, navigate to the frontend directory
 cd frontend
 npm install
 npm run dev
@@ -280,16 +285,17 @@ docker compose up --build
 ```
 Credit-Risk-Analytics-Platform/
 │
-├── server.py                    ← FastAPI app & all API endpoints
-├── model_utils.py               ← ML preprocessing & training logic
-├── credit_data.csv              ← Default dataset (5,000 records)
-├── requirements.txt             ← Python dependencies
-├── Dockerfile                   ← Backend container definition
 ├── docker-compose.yml           ← Multi-service orchestration
 │
-├── tests/
-│   ├── test_model_utils.py      ← Unit tests — ML logic (10 tests)
-│   └── test_server.py           ← Integration tests — API (18 tests)
+├── backend/
+│   ├── server.py                ← FastAPI app & all API endpoints
+│   ├── model_utils.py           ← ML preprocessing & training logic
+│   ├── credit_data.csv          ← Default dataset (5,000 records)
+│   ├── requirements.txt         ← Python dependencies
+│   ├── Dockerfile               ← Backend container definition
+│   └── tests/
+│       ├── test_model_utils.py  ← Unit tests — ML logic (10 tests)
+│       └── test_server.py       ← Integration tests — API (18 tests)
 │
 └── frontend/
     ├── Dockerfile               ← Frontend container (Nginx)
@@ -367,11 +373,14 @@ curl -X POST http://localhost:8000/api/predict \
 ## 🧪 Testing
 
 ```bash
+# Navigate to the backend directory
+cd backend
+
 # Run full test suite (28 tests)
-python -m pytest
+python -m pytest tests/
 
 # Verbose output with test names
-python -m pytest -v
+python -m pytest -v tests/
 
 # Run specific test file
 python -m pytest tests/test_model_utils.py -v
